@@ -8,8 +8,8 @@ use Core\Session;
 use Models\UserModel;
 
 /**
- * Autenticación: comprueba credenciales y abre/cierra la sesión.
- * NO es el controlador de UserModel (para eso está UserController).
+- Autenticación: comprueba credenciales y abre/cierra la sesión.
+- NO es el controlador de UserModel (para eso está UserController).
  */
 final class AuthController
 {
@@ -29,10 +29,23 @@ final class AuthController
         //       (Etapa 4: llamad antes a Session::regenerar())
         // TODO: si falla -> redirect('login')
         //       (mismo comportamiento si el correo no existe que si la contraseña es incorrecta)
+        $email = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        $usuario = (new UserModel())->findByEmail($email);
+
+        if ($usuario !== null && password_verify($password, $usuario['hash'])) {
+            Session::set('user_id', $usuario['id']);
+            redirect('perfil');
+        }
+
+        redirect('login');
     }
 
     public function logout(): void
     {
         // TODO (Etapa 2): Session::destruir() y redirect('login')
+        Session::destruir();
+        redirect('login');
     }
 }

@@ -52,6 +52,21 @@ final class Session
     {
         // Etapa 1: solo session_destroy().
         // Etapa 2 (TODO): completar con los 3 pasos del apartado 3.6
+        $_SESSION = [];
+
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params['path'],
+                $params['domain'],
+                $params['secure'],
+                $params['httponly']
+            );
+        }
+
         session_destroy();
     }
 
