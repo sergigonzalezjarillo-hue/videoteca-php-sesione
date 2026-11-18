@@ -22,6 +22,17 @@ final class Session
         //      $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
         // TODO (Etapa 4, Exp. B): session_set_cookie_params([...])
         //      con httponly, samesite y secure
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.use_only_cookies', '1');
+        ini_set('session.use_trans_sid', '0');
+
+        $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+
+        session_set_cookie_params([
+            'httponly' => true,
+            'samesite' => 'Lax',
+            'secure' => $https,
+        ]);
 
         session_start();
     }
@@ -74,6 +85,7 @@ final class Session
     public static function regenerar(): void
     {
         // TODO: session_regenerate_id(true)
+        session_regenerate_id(true);
     }
 
     // ---------- Etapa 5: mensajes flash ----------
