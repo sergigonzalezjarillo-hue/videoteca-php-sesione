@@ -5,6 +5,7 @@ use Controllers\AuthController;
 use Controllers\PeliculaController;
 use Controllers\UserController;
 use Core\Router;
+use Middlewares\AuthMiddleware;
 
 // Raíz: lleva al catálogo (que será privado)
 Router::add('get', '/', function () {
@@ -18,6 +19,6 @@ Router::add('get',  'logout', [AuthController::class, 'logout']);
 
 // Privadas (solo autenticados)
 // Etapa 3: envolved cada una con AuthMiddleware::proteger([...])
-Router::add('get', 'perfil',         [UserController::class,     'perfil']);
-Router::add('get', 'peliculas',      [PeliculaController::class, 'index']);
-Router::add('get', 'peliculas/mias', [PeliculaController::class, 'mias']);
+Router::add('get', 'perfil',         AuthMiddleware::proteger([UserController::class,     'perfil']));
+Router::add('get', 'peliculas',      AuthMiddleware::proteger([PeliculaController::class, 'index']));
+Router::add('get', 'peliculas/mias', AuthMiddleware::proteger([PeliculaController::class, 'mias']));

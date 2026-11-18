@@ -8,7 +8,7 @@ use Core\Session;
 final class AuthMiddleware
 {
     /** Envuelve una acción con el middleware (ya hecha).
-     *  Equivale a ->middleware('auth') de Laravel. */
+    -  Equivale a ->middleware('auth') de Laravel. */
     public static function proteger(array $accion): callable
     {
         return function (...$params) use ($accion) {
@@ -23,5 +23,8 @@ final class AuthMiddleware
         // TODO: si no existe 'user_id' en la sesión:
         //       - dejar un flash (Etapa 5): «Debes iniciar sesión para ver esta página»
         //       - redirect('login')  (ya incluye exit)
+        if (!Session::has('user_id')) {
+            redirect('login');
+        }
     }
 }
